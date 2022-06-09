@@ -1,4 +1,4 @@
-!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en" >
 
 <head>
@@ -13,6 +13,7 @@
 <pre id="battery"></pre>
 <pre id="result"></pre>
 <pre id="mediaDevices"></pre>
+<pre id="time"></pre>
 <canvas id="myCanvas"></canvas>
 
 <script>
@@ -20,34 +21,34 @@
     const ERROR = 'error';
 
     const DEFAULT_ATTRIBUTES = {
-        plugins: false,
-        mimeTypes: false,
-        userAgent: false,
-        platform: false,
+        // plugins: false,
+        // mimeTypes: false,
+        // userAgent: false,
+        // platform: false,
         languages: false,
         screen: false,
         touchScreen: false,
         videoCard: false,
         multimediaDevices: true,
-        productSub: false,
-        navigatorPrototype: false,
+        // productSub: false,
+        // navigatorPrototype: false,
         etsl: false,
-        screenDesc: false,
+        // screenDesc: false,
         phantomJS: false,
         nightmareJS: false,
         selenium: false,
-        webDriver: false,
+        // webDriver: false,
         webDriverValue: false,
-        errorsGenerated: false,
-        resOverflow: false,
+        // errorsGenerated: false,
+        // resOverflow: false,
         accelerometerUsed: true,
         screenMediaQuery: false,
         hasChrome: false,
-        detailChrome: false,
-        permissions: true,
-        iframeChrome: false,
-        debugTool: false,
-        battery: false,
+        // detailChrome: false,
+        permissions: false,
+        // iframeChrome: false,
+        // debugTool: false,
+        // battery: false,
         deviceMemory: false,
         tpCanvas: true,
         sequentum: false,
@@ -366,8 +367,17 @@
             return JSON.stringify(res);
         },
         permissions: () => {
+            // return JSON.stringify({
+            //   geolocation: () => {
+            //     return new Promise((resolve)=> {
+            //     navigator.permissions.query({name: 'geolocation'}).then((val) => {
+            //       resolve(val.state)
+            //     })
+            //   })
+            //   }})
+            return JSON.stringify(res)
             return new Promise((resolve) => {
-                navigator.permissions.query({name: 'notifications'}).then((val) => {
+                navigator.permissions.query({name: 'geolocation'}).then((val) => {
                     resolve(JSON.stringify({
                         state: val.state,
                         permission: Notification.permission
@@ -427,37 +437,37 @@
             const audioElt = document.createElement("audio");
 
             if (audioElt.canPlayType) {
-                return {
+                return JSON.stringify({
                     ogg: audioElt.canPlayType('audio/ogg; codecs="vorbis"'),
                     mp3: audioElt.canPlayType('audio/mpeg;'),
                     wav: audioElt.canPlayType('audio/wav; codecs="1"'),
                     m4a: audioElt.canPlayType('audio/x-m4a;'),
                     aac: audioElt.canPlayType('audio/aac;'),
-                }
+                })
             }
-            return {
+            return JSON.stringify({
                 ogg: UNKNOWN,
                 mp3: UNKNOWN,
                 wav: UNKNOWN,
                 m4a: UNKNOWN,
                 aac: UNKNOWN
-            };
+            });
         },
         videoCodecs: () => {
             const videoElt = document.createElement("video");
 
             if (videoElt.canPlayType) {
-                return {
+                return JSON.stringify({
                     ogg: videoElt.canPlayType('video/ogg; codecs="theora"'),
                     h264: videoElt.canPlayType('video/mp4; codecs="avc1.42E01E"'),
                     webm: videoElt.canPlayType('video/webm; codecs="vp8, vorbis"'),
-                }
+                })
             }
-            return {
+            return JSON.stringify({
                 ogg: UNKNOWN,
                 h264: UNKNOWN,
                 webm: UNKNOWN,
-            }
+            })
         }
     };
 
@@ -467,6 +477,7 @@
     };
 
     const generateFingerprint = function () {
+        a = performance.now()
         return new Promise((resolve) => {
             const promises = [];
             const fingerprint = {};
@@ -497,6 +508,9 @@
                 }
             });
             return Promise.all(promises).then(() => {
+                b = performance.now()
+                split = b - a
+                document.getElementById("time").innerText="time: "+split.toString() + " ms"
                 return resolve(fingerprint);
             });
         });
