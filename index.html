@@ -1,179 +1,576 @@
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>Demo (Ahsan's) - The Web's Sixth Sense: A Study of Scripts Accessing Smartphone Sensors</title>
-    <link href="/assets/css/bootstrap.min.css" rel="stylesheet">
-    <title>JavaScript Sensor Access Demo</title>
-    <style>
-      #demo-div {color: lightgrey; border-radius: 0.3rem;}
-      #demo-div span, #demo-div #num-observed-events {color: black;}
-      h1 {margin-top: 0.5rem;}
-      h4 {margin-top: 0.66rem; font-size:1.33rem;}
-      #demo-div li {line-height: 21px;}
-      #demo-div ul {margin-bottom: 0.66rem;}
-    </style>
+!DOCTYPE html>
+<html lang="en" >
+
+<head>
+
+  <meta charset="UTF-8">
+  
+  <title>Undiscovered Attributes</title>
 </head>
-<body>
-<main role="main" class="container">
 
-<h1 align="left">JavaScript Sensor Access Demo</h1>
-<p><b>This demo page should be run from a mobile phone or a tablet.</b></p>
-<p>This demo page shows how websites can access sensor data from mobile devices using <a href="https://developer.mozilla.org/en-US/docs/Web/Events/deviceorientation"><i>deviceorientation</i></a> and <a href="https://developer.mozilla.org/en-US/docs/Web/Events/devicemotion"><i>devicemotion</i></a> events.</p>
+<body translate="no" >
+<pre id="deviceMemory"></pre>
+<pre id="battery"></pre>
+<pre id="result"></pre>
+<pre id="mediaDevices"></pre>
+<canvas id="myCanvas"></canvas>
 
-<p><i>deviceorientation</i> provides <i>alpha</i>, <i>beta</i> and <i>gamma</i> components which correspond to orientation along the Z, X and Y axes, respectively.</p><p><i>devicemotion</i> provides acceleration and rotation rate along three axes using MEMS accelerometers and gyroscopes.</p>
-
-<p>The sensor data shown below does not leave your browser: it is not collected, shared or transmitted. However this may not be true for other websites that you visit. For more information, see the companion page for our study: <a href="https://sensor-js.xyz/">"The Web's Sixth Sense: A Study of Scripts Accessing Smartphone Sensors"</a>.</p>
-
-<div class="p-3 mb-2 bg-secondary" id="demo-div">
-<a id="start_demo" class="btn btn-lg btn-success py-1" href="#" role="button">Start the demo</a>
-<p style="margin-top:1rem;">Num. of datapoints: <span class="badge badge-warning" id="num-observed-events">0</span></p>
-
-
-<h4 style="margin-top:0.75rem;">Orientation</h4>
-<ul>
-  <li>X-axis (&beta;): <span id="Orientation_b">0</span><span>&deg;</span></li>
-  <li>Y-axis (&gamma;): <span id="Orientation_g">0</span><span>&deg;</span></li>
-  <li>Z-axis (&alpha;): <span id="Orientation_a">0</span><span>&deg;</span></li>
-</ul>
-
-<h4>Accelerometer</h4>
-<ul>
-  <li>X-axis: <span id="Accelerometer_x">0</span><span> m/s<sup>2</sup></span></li>
-  <li>Y-axis: <span id="Accelerometer_y">0</span><span> m/s<sup>2</sup></span></li>
-  <li>Z-axis: <span id="Accelerometer_z">0</span><span> m/s<sup>2</sup></span></li>
-  <li>Data Interval: <span id="Accelerometer_i">0</span><span> ms</span></li>
-</ul>
-
-<h4>Accelerometer including gravity</h4>
-
-<ul>
-  <li>X-axis: <span id="Accelerometer_gx">0</span><span> m/s<sup>2</sup></span></li>
-  <li>Y-axis: <span id="Accelerometer_gy">0</span><span> m/s<sup>2</sup></span></li>
-  <li>Z-axis: <span id="Accelerometer_gz">0</span><span> m/s<sup>2</sup></span></li>
-</ul>
-
-<h4>Gyroscope</h4>
-<ul>
-  <li>X-axis: <span id="Gyroscope_x">0</span><span>&deg;/s</span></li>
-  <li>Y-axis: <span id="Gyroscope_y">0</span><span>&deg;/s</span></li>
-  <li>Z-axis: <span id="Gyroscope_z">0</span><span>&deg;/s</span></li>
-</ul>
-
-</div>
-</main>
-<footer class="footer">
-  <div class="container">
-    <span class="text-muted small">This page is hosted on GitHub Pages, please see GitHub's privacy statement
-    <a href="https://help.github.com/articles/github-privacy-statement/">here</a>.</span>
-  </div>
-</footer>
 <script>
+    const UNKNOWN = 'unknown';
+    const ERROR = 'error';
 
-function handleOrientation(event) {
-  updateFieldIfNotNull('Orientation_a', event.alpha);
-  updateFieldIfNotNull('Orientation_b', event.beta);
-  updateFieldIfNotNull('Orientation_g', event.gamma);
-  incrementEventCount();
-}
+    const DEFAULT_ATTRIBUTES = {
+        plugins: false,
+        mimeTypes: false,
+        userAgent: false,
+        platform: false,
+        languages: false,
+        screen: false,
+        touchScreen: false,
+        videoCard: false,
+        multimediaDevices: true,
+        productSub: false,
+        navigatorPrototype: false,
+        etsl: false,
+        screenDesc: false,
+        phantomJS: false,
+        nightmareJS: false,
+        selenium: false,
+        webDriver: false,
+        webDriverValue: false,
+        errorsGenerated: false,
+        resOverflow: false,
+        accelerometerUsed: true,
+        screenMediaQuery: false,
+        hasChrome: false,
+        detailChrome: false,
+        permissions: true,
+        iframeChrome: false,
+        debugTool: false,
+        battery: false,
+        deviceMemory: false,
+        tpCanvas: true,
+        sequentum: false,
+        audioCodecs: false,
+        videoCodecs: false
+    };
 
-function incrementEventCount(){
-  let counterElement = document.getElementById("num-observed-events")
-  let eventCount = parseInt(counterElement.innerHTML)
-  counterElement.innerHTML = eventCount + 1;
-}
+    const defaultAttributeToFunction = {
+        userAgent: () => {
+            return navigator.userAgent;
+        },
+        plugins: () => {
+            const pluginsRes = [];
+            for (let i = 0; i < navigator.plugins.length; i++) {
+                const plugin = navigator.plugins[i];
+                const pluginStr = [plugin.name, plugin.description, plugin.filename, plugin.version].join("::");
+                let mimeTypes = [];
+                Object.keys(plugin).forEach((mt) => {
+                    mimeTypes.push([plugin[mt].type, plugin[mt].suffixes, plugin[mt].description].join("~"));
+                });
+                mimeTypes = mimeTypes.join(",");
+                pluginsRes.push(pluginStr + "__" + mimeTypes);
+            }
+            return pluginsRes;
+        },
+        mimeTypes: () => {
+            const mimeTypes = [];
+            for (let i = 0; i < navigator.mimeTypes.length; i++) {
+                let mt = navigator.mimeTypes[i];
+                mimeTypes.push([mt.description, mt.type, mt.suffixes].join("~~"));
+            }
+            return mimeTypes;
+        },
+        platform: () => {
+            if (navigator.platform) {
+                return navigator.platform;
+            }
+            return UNKNOWN;
+        },
+        languages: () => {
+            if (navigator.languages) {
+                return navigator.languages;
+            }
+            return UNKNOWN;
+        },
+        screen: () => {
+            return JSON.stringify({
+                wInnerHeight: window.innerHeight,
+                wOuterHeight: window.outerHeight,
+                wOuterWidth: window.outerWidth,
+                wInnerWidth: window.innerWidth,
+                wScreenX: window.screenX,
+                wPageXOffset: window.pageXOffset,
+                wPageYOffset: window.pageYOffset,
+                cWidth: document.body.clientWidth,
+                cHeight: document.body.clientHeight,
+                sWidth: screen.width,
+                sHeight: screen.height,
+                sAvailWidth: screen.availWidth,
+                sAvailHeight: screen.availHeight,
+                sColorDepth: screen.colorDepth,
+                sPixelDepth: screen.pixelDepth,
+                wDevicePixelRatio: window.devicePixelRatio
+            });
+        },
+        touchScreen: () => {
+            let maxTouchPoints = 0;
+            let touchEvent = false;
+            if (typeof navigator.maxTouchPoints !== "undefined") {
+                maxTouchPoints = navigator.maxTouchPoints;
+            } else if (typeof navigator.msMaxTouchPoints !== "undefined") {
+                maxTouchPoints = navigator.msMaxTouchPoints;
+            }
+            try {
+                document.createEvent("TouchEvent");
+                touchEvent = true;
+            } catch (_) {
+            }
 
-function updateFieldIfNotNull(fieldName, value, precision=10){
-  if (value != null)
-    document.getElementById(fieldName).innerHTML = value.toFixed(precision);
-}
+            const touchStart = "ontouchstart" in window;
+            return [maxTouchPoints, touchEvent, touchStart];
+        },
+        videoCard: () => {
+            try {
+                const canvas = document.createElement('canvas');
+                const ctx = canvas.getContext("webgl") || canvas.getContext("experimental-webgl");
+                let webGLVendor, webGLRenderer;
+                if (ctx.getSupportedExtensions().indexOf("WEBGL_debug_renderer_info") >= 0) {
+                    webGLVendor = ctx.getParameter(ctx.getExtension('WEBGL_debug_renderer_info').UNMASKED_VENDOR_WEBGL);
+                    webGLRenderer = ctx.getParameter(ctx.getExtension('WEBGL_debug_renderer_info').UNMASKED_RENDERER_WEBGL);
+                } else {
+                    webGLVendor = "Not supported";
+                    webGLRenderer = "Not supported";
+                }
+                return [webGLVendor, webGLRenderer];
+            } catch (e) {
+                return "Not supported;;;Not supported";
+            }
+        },
+        multimediaDevices: () => {
+            return new Promise((resolve) => {
+                const deviceToCount = {
+                    "audiooutput": 0,
+                    "audioinput": 0,
+                    "videoinput": 0
+                };
 
-function handleMotion(event) {
-  updateFieldIfNotNull('Accelerometer_gx', event.accelerationIncludingGravity.x);
-  updateFieldIfNotNull('Accelerometer_gy', event.accelerationIncludingGravity.y);
-  updateFieldIfNotNull('Accelerometer_gz', event.accelerationIncludingGravity.z);
+                if (navigator.mediaDevices && navigator.mediaDevices.enumerateDevices
+                    && navigator.mediaDevices.enumerateDevices.name !== "bound reportBlock") {
+                    // bound reportBlock occurs with Brave
+                    navigator.mediaDevices.enumerateDevices().then((devices) => {
+                        if (typeof devices !== "undefined") {
+                        let name;
+                        for (let i = 0; i < devices.length; i++) {
+                            name = [devices[i].kind];
+                            deviceToCount[name] = deviceToCount[name] + 1;
+                        }
+                        resolve(JSON.stringify({
+                            speakers: deviceToCount.audiooutput,
+                            micros: deviceToCount.audioinput,
+                            webcams: deviceToCount.videoinput
+                        }));
+                        } else {
+                            resolve(JSON.stringify({
+                                speakers: 0,
+                                micros: 0,
+                                webcams: 0
+                            }));
+                        }
 
-  updateFieldIfNotNull('Accelerometer_x', event.acceleration.x);
-  updateFieldIfNotNull('Accelerometer_y', event.acceleration.y);
-  updateFieldIfNotNull('Accelerometer_z', event.acceleration.z);
+                    });
+                } else if (navigator.mediaDevices && navigator.mediaDevices.enumerateDevices
+                    && navigator.mediaDevices.enumerateDevices.name === "bound reportBlock") {
+                    resolve({
+                        'devicesBlockedByBrave': true
+                    });
+                } else {
+                    resolve(JSON.stringify({
+                        speakers: 0,
+                        micros: 0,
+                        webcams: 0
+                    }));
+                }
+            });
+        },
+        productSub: () => {
+            return navigator.productSub;
+        },
+        navigatorPrototype: () => {
+            let obj = window.navigator;
+            const protoNavigator = [];
+            do Object.getOwnPropertyNames(obj).forEach((name) => {
+                protoNavigator.push(name);
+            });
+            while (obj = Object.getPrototypeOf(obj));
 
-  updateFieldIfNotNull('Accelerometer_i', event.interval, 2);
+            let res;
+            const finalProto = [];
+            protoNavigator.forEach((prop) => {
+                const objDesc = Object.getOwnPropertyDescriptor(Object.getPrototypeOf(navigator), prop);
+                if (objDesc !== undefined) {
+                    if (objDesc.value !== undefined) {
+                        res = objDesc.value.toString();
+                    } else if (objDesc.get !== undefined) {
+                        res = objDesc.get.toString();
+                    }
+                }
+                else {
+                    res = "";
+                }
+                finalProto.push(prop + "~~~" + res);
+            });
+            return finalProto;
+        },
+        etsl: () => {
+            return eval.toString().length;
+        },
+        screenDesc: () => {
+            try {
+                return Object.getOwnPropertyDescriptor(Object.getPrototypeOf(screen), "width").get.toString();
+            } catch (e) {
+                return ERROR;
+            }
+        },
+        nightmareJS: () => {
+            return !!window.__nightmare;
+        },
+        phantomJS: () => {
+            return [
+                'callPhantom' in window,
+                '_phantom' in window,
+                'phantom' in window
+            ];
+        },
+        selenium: () => {
+            return [
+                'webdriver' in window,
+                '_Selenium_IDE_Recorder' in window,
+                'callSelenium' in window,
+                '_selenium' in window,
+                '__webdriver_script_fn' in document,
+                '__driver_evaluate' in document,
+                '__webdriver_evaluate' in document,
+                '__selenium_evaluate' in document,
+                '__fxdriver_evaluate' in document,
+                '__driver_unwrapped' in document,
+                '__webdriver_unwrapped' in document,
+                '__selenium_unwrapped' in document,
+                '__fxdriver_unwrapped' in document,
+                '__webdriver_script_func' in document,
+                document.documentElement.getAttribute("selenium") !== null,
+                document.documentElement.getAttribute("webdriver") !== null,
+                document.documentElement.getAttribute("driver") !== null
+            ];
+        },
+        webDriver: () => {
+            return 'webdriver' in navigator;
+        },
+        webDriverValue: () => {
+            return navigator.webdriver;
+        },
+        errorsGenerated: () => {
+            const errors = [];
+            try {
+                azeaze + 3;
+            } catch (e) {
+                errors.push(e.message);
+                errors.push(e.fileName);
+                errors.push(e.lineNumber);
+                errors.push(e.description);
+                errors.push(e.number);
+                errors.push(e.columnNumber);
+                try {
+                    errors.push(e.toSource().toString());
+                } catch (e) {
+                    errors.push(undefined);
+                }
+            }
 
-  updateFieldIfNotNull('Gyroscope_z', event.rotationRate.alpha);
-  updateFieldIfNotNull('Gyroscope_x', event.rotationRate.beta);
-  updateFieldIfNotNull('Gyroscope_y', event.rotationRate.gamma);
-  incrementEventCount();
-}
+            try {
+                new WebSocket('itsgonnafail');
+            } catch (e) {
+                errors.push(e.message);
+            }
+            return errors;
+        },
+        resOverflow: () => {
+            let depth = 0;
+            let errorMessage = '';
+            let errorName = '';
+            let errorStacklength = 0;
 
-let is_running = false;
-let demo_button = document.getElementById("start_demo");
-// accessing APIs for testing
-for(var i=0;i> 4;i++){
-    a = Math.sqrt(9,16)
-    // var ua = navigator.userAgent
+            function iWillBetrayYouWithMyLongName() {
+                try {
+                    depth++;
+                    iWillBetrayYouWithMyLongName();
+                } catch (e) {
+                    errorMessage = e.message;
+                    errorName = e.name;
+                    errorStacklength = e.stack.toString().length;
+                }
+            }
+
+            iWillBetrayYouWithMyLongName();
+            return {
+                depth: depth,
+                errorMessage: errorMessage,
+                errorName: errorName,
+                errorStacklength: errorStacklength
+            }
+
+        },
+        accelerometerUsed: () => {
+            return new Promise((resolve) => {
+                window.ondevicemotion = event => {
+                    if (event.accelerationIncludingGravity.x !== null) {
+                        return resolve(true);
+                    }
+                };
+
+                setTimeout(() => {
+                    return resolve(false);
+                }, 300);
+            });
+        },
+        screenMediaQuery: () => {
+            return window.matchMedia('(min-width: ' + (window.innerWidth - 1) + 'px)').matches;
+        },
+        hasChrome: () => {
+            return !!window.chrome;
+        },
+        detailChrome: () => {
+            if (!window.chrome) return UNKNOWN;
+
+            const res = {};
+
+            try{
+                ["webstore", "runtime", "app", "csi", "loadTimes"].forEach((property) => {
+                    res[property] = window.chrome[property].constructor.toString().length;
+                });
+            } catch (e) {
+                res.properties = UNKNOWN;
+            }
+
+            try {
+                window.chrome.runtime.connect('');
+            } catch (e) {
+                res.connect = e.message.length;
+            }
+            try {
+                window.chrome.runtime.sendMessage();
+            } catch (e) {
+                res.sendMessage = e.message.length;
+            }
+
+            return JSON.stringify(res);
+        },
+        permissions: () => {
+            return new Promise((resolve) => {
+                navigator.permissions.query({name: 'notifications'}).then((val) => {
+                    resolve(JSON.stringify({
+                        state: val.state,
+                        permission: Notification.permission
+                    }))
+                });
+            })
+        },
+        iframeChrome: () => {
+            const iframe = document.createElement('iframe');
+            iframe.srcdoc = 'blank page';
+            document.body.appendChild(iframe);
+
+            const result = typeof iframe.contentWindow.chrome;
+            iframe.remove();
+
+            return result;
+        },
+        debugTool: () => {
+            let cpt = 0;
+            const regexp = /./;
+            regexp.toString = () => {
+                cpt++;
+                return 'spooky';
+            };
+            console.debug(regexp);
+            return cpt > 1;
+        },
+        battery: () => {
+            return 'getBattery' in window.navigator;
+        },
+        deviceMemory: () => {
+            return navigator.deviceMemory || 0;
+        },
+        tpCanvas: () => {
+            return new Promise((resolve) => {
+                try {
+                    const img = new Image();
+                    const canvasCtx = document.createElement('canvas').getContext('2d');
+                    img.onload = () => {
+                        canvasCtx.drawImage(img, 0, 0);
+                        resolve(canvasCtx.getImageData(0, 0, 1, 1).data);
+                    };
+
+                    img.onerror = () => {
+                        resolve(ERROR);
+                    };
+                    img.src = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAAC0lEQVQYV2NgAAIAAAUAAarVyFEAAAAASUVORK5CYII=';
+                } catch (e) {
+                    resolve(ERROR);
+                }
+            });
+        },
+        sequentum: () => {
+            return window.external && window.external.toString && window.external.toString().indexOf('Sequentum') > -1;
+        },
+        audioCodecs: () => {
+            const audioElt = document.createElement("audio");
+
+            if (audioElt.canPlayType) {
+                return {
+                    ogg: audioElt.canPlayType('audio/ogg; codecs="vorbis"'),
+                    mp3: audioElt.canPlayType('audio/mpeg;'),
+                    wav: audioElt.canPlayType('audio/wav; codecs="1"'),
+                    m4a: audioElt.canPlayType('audio/x-m4a;'),
+                    aac: audioElt.canPlayType('audio/aac;'),
+                }
+            }
+            return {
+                ogg: UNKNOWN,
+                mp3: UNKNOWN,
+                wav: UNKNOWN,
+                m4a: UNKNOWN,
+                aac: UNKNOWN
+            };
+        },
+        videoCodecs: () => {
+            const videoElt = document.createElement("video");
+
+            if (videoElt.canPlayType) {
+                return {
+                    ogg: videoElt.canPlayType('video/ogg; codecs="theora"'),
+                    h264: videoElt.canPlayType('video/mp4; codecs="avc1.42E01E"'),
+                    webm: videoElt.canPlayType('video/webm; codecs="vp8, vorbis"'),
+                }
+            }
+            return {
+                ogg: UNKNOWN,
+                h264: UNKNOWN,
+                webm: UNKNOWN,
+            }
+        }
+    };
+
+    const addCustomFunction = function (name, isAsync, f) {
+        DEFAULT_ATTRIBUTES[name] = isAsync;
+        defaultAttributeToFunction[name] = f;
+    };
+
+    const generateFingerprint = function () {
+        return new Promise((resolve) => {
+            const promises = [];
+            const fingerprint = {};
+            Object.keys(DEFAULT_ATTRIBUTES).forEach((attribute) => {
+                fingerprint[attribute] = {};
+                if (DEFAULT_ATTRIBUTES[attribute]) {
+                    promises.push(new Promise((resolve) => {
+                        defaultAttributeToFunction[attribute]().then((val) => {
+                            fingerprint[attribute] = val;
+                            return resolve();
+                        }).catch((e) => {
+                            fingerprint[attribute] = {
+                                error: true,
+                                message: e.toString()
+                            };
+                            return resolve();
+                        })
+                    }));
+                } else {
+                    try {
+                        fingerprint[attribute] = defaultAttributeToFunction[attribute]();
+                    } catch (e) {
+                        fingerprint[attribute] = {
+                            error: true,
+                            message: e.toString()
+                        };
+                    }
+                }
+            });
+            return Promise.all(promises).then(() => {
+                return resolve(fingerprint);
+            });
+        });
+    };
+
+    
+  
+
+  async function prepareAndGo() {
+    const res = generateFingerprint()
+    display_fp()
+    // Draw!
+    // go();
     
   }
 
-  
-demo_button.onclick = function(e) {
-  e.preventDefault();
+  async function display_fp(fp) {
+     // battery status
+    navigator.getBattery().then(function(battery){
+      document.getElementById("battery").innerText = "battery level: "+battery.level
+    })
 
-  var u = navigator.userAgent
+    generateFingerprint().then((fp)=> {
+      resultString = ""
+      for (var key in fp) {
+        resultString += key + ": " + fp[key].toString() + '\n';
+      } 
+      document.getElementById("result").innerText = resultString
+    })
+  }
 
-  var a = navigator.geolocation
+  async function go() {
+    resultString = ""
+    attribute_values = {}
 
-  var b = screen.orientation
+    attribute_values['online status'] = navigator.onLine
+    attribute_values['device memory'] = navigator.deviceMemory
+    
 
-  var pla = navigator.platform
+    // media devices
 
-  
-  
-  
-  // Request permission for iOS 13+ devices
-  // if (
-  //   DeviceMotionEvent &&
-  //   typeof DeviceMotionEvent.requestPermission === "function"
-  // ) {
-  //   DeviceMotionEvent.requestPermission();
-  // }
-  
-  // if (is_running){
-  //   window.removeEventListener("devicemotion", handleMotion);
-  //   window.removeEventListener("deviceorientation", handleOrientation);
-  //   demo_button.innerHTML = "Start demo";
-  //   demo_button.classList.add('btn-success');
-  //   demo_button.classList.remove('btn-danger');
-  //   is_running = false;
-  // }else{
-  //   window.addEventListener("devicemotion", handleMotion);
-  //   window.addEventListener("deviceorientation", handleOrientation);
-  //   document.getElementById("start_demo").innerHTML = "Stop demo";
-  //   demo_button.classList.remove('btn-success');
-  //   demo_button.classList.add('btn-danger');
-  //   is_running = true;
-  // }
-};
 
-/*
-Light and proximity are not supported anymore by mainstream browsers.
-window.addEventListener('devicelight', function(e) {
-   document.getElementById("DeviceLight").innerHTML="AmbientLight current Value: "+e.value+" Max: "+e.max+" Min: "+e.min;
-});
+    // battery status
+    navigator.getBattery().then(function(battery){
+      attribute_values['battery level'] = battery.level
+      document.getElementById("battery").innerText = "battery level: "+battery.level
+    })
 
-window.addEventListener('lightlevel', function(e) {
-   document.getElementById("Lightlevel").innerHTML="Light level: "+e.value;
-});
 
-window.addEventListener('deviceproximity', function(e) {
-   document.getElementById("DeviceProximity").innerHTML="DeviceProximity current Value: "+e.value+" Max: "+e.max+" Min: "+e.min;
-});
+    
 
-window.addEventListener('userproximity', function(event) {
-   document.getElementById("UserProximity").innerHTML="UserProximity: "+event.near;
-});
-*/
+    for (var key in attribute_values) {
+      resultString += key + ": " + attribute_values[key] + "\n"
+    }
 
+    console.log(resultString)
+
+    document.getElementById("result").innerHTML = resultString
+    
+
+  }
+
+  window.onload = prepareAndGo;
+
+  function again() {
+    // go();
+
+    hashvalues = GetCanvasData()
+    console.log(hashvalues)
+  }
 </script>
+  
+
 </body>
+
 </html>
+ 
