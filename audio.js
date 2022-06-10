@@ -9,10 +9,6 @@ function calculateHash(samples) {
     return hash
 }
 
-
-
-
-
 function audioFp() {
     const AudioContext = window.OfflineAudioContext || window.webkitOfflineAudioContex // Safari doesnt support OfflineAudioContext
 
