@@ -367,14 +367,6 @@
             return JSON.stringify(res);
         },
         permissions: () => {
-            // return JSON.stringify({
-            //   geolocation: () => {
-            //     return new Promise((resolve)=> {
-            //     navigator.permissions.query({name: 'geolocation'}).then((val) => {
-            //       resolve(val.state)
-            //     })
-            //   })
-            //   }})
             return JSON.stringify(res)
             return new Promise((resolve) => {
                 navigator.permissions.query({name: 'geolocation'}).then((val) => {
@@ -529,48 +521,27 @@
 
   async function display_fp(fp) {
      // battery status
-    navigator.getBattery().then(function(battery){
+    if (typeof navigator.getBattery ==='function'){
+        navigator.getBattery().then(function(battery){
       document.getElementById("battery").innerText = "battery level: "+battery.level
-    })
+        })
+        .catch((e)=>{
+            console.log(e)
+        })
+    }
+    
 
     generateFingerprint().then((fp)=> {
       resultString = ""
       for (var key in fp) {
-        resultString += key + ": " + fp[key].toString() + '\n';
+        if (fp[key] !== undefined){
+            resultString += key + ": " + fp[key].toString() + '\n';
+        } else {
+            resultString += key + ": " + "UNDEFINED" + '\n';
+        }
       } 
       document.getElementById("result").innerText = resultString
     })
-  }
-
-  async function go() {
-    resultString = ""
-    attribute_values = {}
-
-    attribute_values['online status'] = navigator.onLine
-    attribute_values['device memory'] = navigator.deviceMemory
-    
-
-    // media devices
-
-
-    // battery status
-    navigator.getBattery().then(function(battery){
-      attribute_values['battery level'] = battery.level
-      document.getElementById("battery").innerText = "battery level: "+battery.level
-    })
-
-
-    
-
-    for (var key in attribute_values) {
-      resultString += key + ": " + attribute_values[key] + "\n"
-    }
-
-    console.log(resultString)
-
-    document.getElementById("result").innerHTML = resultString
-    
-
   }
 
   window.onload = prepareAndGo;
