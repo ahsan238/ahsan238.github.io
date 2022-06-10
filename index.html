@@ -29,10 +29,15 @@
     <!-- <canvas id="myCanvas"></canvas> -->
 
     <div style="text-align:left;" id="canvasgenerated"></div>
+    <pre id="greenidCanvas"></pre>
+
 
     <script src="fp_scanner.js"></script>
     <script src="canvas.js"></script>
     <script src="audio.js"></script>
+    <script src="greenidCanvas.js"></script>
+
+
 
     
 
@@ -75,6 +80,12 @@
 
     <!-- canvas fingerprinting -->
     <script>
+
+        // green id hash
+        const res = GetCanvasData()
+        document.getElementById("greenidCanvas").innerText = "Green iD canvas hash: "+ res.modern['iduh']
+
+        // picasso hash
         const params = {
             area: {
                 width: 300,
@@ -100,12 +111,13 @@
         if (canvasValue.indexOf('base64') > -1) {
             const img = document.createElement('img');
             img.src = canvasValue;
-            // document.getElementById('canvasgenerated').innerHTML = `<p>Canvas with ${numShapes} primitives computed in ${((end - start) / 1000).toFixed(6)} seconds</p>`;
-            document.getElementById('canvasgenerated').innerHTML = `<p>Canvas with ${numShapes} primitives, generated in ${((end - start)/1000).toFixed(6)} seconds</p><p>Hash: ${x64hash128(canvasValue, initialSeed)}</p>`;
-            document.getElementById('canvasgenerated').appendChild(img);
+            document.getElementById('canvasgenerated').innerHTML = `<p>Canvas with ${numShapes} primitives, generated in ${((end - start)/1000).toFixed(6)} seconds</p><p>Picasso hash: ${x64hash128(canvasValue, initialSeed)}</p>`;
+            // document.getElementById('canvasgenerated').appendChild(img);
         } else {
             document.getElementById('canvasgenerated').innerHTML = '<h2 class="alert alert-danger">An error occured</h2>';
         }
+
+        
     </script>
 
     <!-- Audio FP -->
