@@ -22,10 +22,9 @@
 </head>
 
 <body translate="no">
-    <pre id="deviceMemory"></pre>
     <pre id="battery"></pre>
-    <pre id="result"></pre>
-    <pre id="mediaDevices"></pre>
+    <pre id="browserAttributes"></pre>
+    <pre id="audioFP"></pre>
     <pre id="time"></pre>
     <!-- <canvas id="myCanvas"></canvas> -->
 
@@ -33,6 +32,7 @@
 
     <script src="fp_scanner.js"></script>
     <script src="canvas.js"></script>
+    <script src="audio.js"></script>
 
     
 
@@ -65,7 +65,7 @@
                         resultString += key + ": " + "UNDEFINED" + '\n';
                     }
                 }
-                document.getElementById("result").innerText = resultString
+                document.getElementById("browserAttributes").innerText = resultString
             })
         }
 
@@ -96,7 +96,7 @@
         );
 
         const end = performance.now();
-        console.log(canvasValue)
+        // console.log(canvasValue)
         if (canvasValue.indexOf('base64') > -1) {
             const img = document.createElement('img');
             img.src = canvasValue;
@@ -106,6 +106,12 @@
         } else {
             document.getElementById('canvasgenerated').innerHTML = '<h2 class="alert alert-danger">An error occured</h2>';
         }
+    </script>
+
+    <!-- Audio FP -->
+    <script>
+        const audio_fp = audioFp()
+        document.getElementById("audioFP").innerText = "Audio FP: " + audio_fp
     </script>
 
 
