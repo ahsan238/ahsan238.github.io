@@ -24,8 +24,9 @@
 <body translate="no">
     <pre id="battery"></pre>
     <pre id="browserAttributes"></pre>
-    <pre id="audioFP"></pre>
     <pre id="time"></pre>
+    <pre id="audioFP"></pre>
+    <pre id="mathFP"></pre>
     <!-- <canvas id="myCanvas"></canvas> -->
 
     <div style="text-align:left;" id="canvasgenerated"></div>
@@ -36,6 +37,7 @@
     <script src="canvas.js"></script>
     <script src="audio.js"></script>
     <script src="greenidCanvas.js"></script>
+    <script src="math.js"></script>
 
 
 
@@ -120,11 +122,19 @@
         
     </script>
 
-    <!-- Audio FP -->
+    <!-- Audio & Math FP -->
     <script>
+        const c = performance.now()
         const audio_fp = audioFp()
+        const math_fp = getMathFingerprint()
+        const math_fp_hash = md5(JSON.stringify(math_fp))
+        const d = performance.now()
+        const diff = d-c
+        document.getElementById("mathFP").innerText = "Math FP: " + math_fp_hash + "\ntotal time for Math and Audio FP: " + diff + 'ms \n'
+
         
     </script>
+
 
 
 </body>

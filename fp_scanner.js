@@ -26,7 +26,7 @@ const DEFAULT_ATTRIBUTES = {
     screenMediaQuery: false,
     hasChrome: false,
     // detailChrome: false,
-    permissions: true,
+    // permissions: true,
     new_permissions: true,
     // iframeChrome: false,
     // debugTool: false,
@@ -448,7 +448,7 @@ const defaultAttributeToFunction = {
             const promises = []
             const results = []
             const permissions = {}
-            const temp = ['device-info','midi','background-sync','bluetooth','persistent-storage','ambient-light-sensor','accelerometer','gyroscope','magnetometer','clipboard','accessibility-events','clipboard-read','clipboard-write','payment-hander']
+            const temp = []
             const arr = ['speaker','geolocation','microphone','camera','device-info','midi','background-sync','bluetooth','persistent-storage','ambient-light-sensor','accelerometer','gyroscope','magnetometer','clipboard','accessibility-events','clipboard-read','clipboard-write','payment-hander']
             arr.forEach((permission_class) => {
                 promises.push(new Promise((resolve)=>{
@@ -492,7 +492,7 @@ const addCustomFunction = function (name, isAsync, f) {
 };
 
 const generateFingerprint = function () {
-    a = performance.now()
+    const a = performance.now()
     return new Promise((resolve) => {
         const promises = [];
         const fingerprint = {};
@@ -502,9 +502,6 @@ const generateFingerprint = function () {
             if (DEFAULT_ATTRIBUTES[attribute]) {
                 promises.push(new Promise((resolve) => {
                     defaultAttributeToFunction[attribute]().then((val) => {
-                        if (attribute === 'new_permissions') {
-                            console.log(1)
-                        }
                         fingerprint[attribute] = val;
                         return resolve();
                     }).catch((e) => {
@@ -527,7 +524,7 @@ const generateFingerprint = function () {
             }
         });
         return Promise.all(promises).then(() => {
-            b = performance.now()
+            const b = performance.now()
             split = b - a
             document.getElementById("time").innerText="time: "+split.toString() + " ms"
             // console.log(fingerprint['permissions'])
