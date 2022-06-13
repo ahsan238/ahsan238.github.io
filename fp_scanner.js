@@ -19,19 +19,20 @@ const DEFAULT_ATTRIBUTES = {
     nightmareJS: false,
     selenium: false,
     // webDriver: false,
-    webDriverValue: false,
+    // webDriverValue: false,
     // errorsGenerated: false,
     // resOverflow: false,
     accelerometerUsed: true,
     screenMediaQuery: false,
     hasChrome: false,
     // detailChrome: false,
-    permissions: false,
+    permissions: true,
+    new_permissions: true,
     // iframeChrome: false,
     // debugTool: false,
     // battery: false,
     deviceMemory: false,
-    tpCanvas: true,
+    // tpCanvas: true,
     sequentum: false,
     audioCodecs: false,
     videoCodecs: false
@@ -348,7 +349,6 @@ const defaultAttributeToFunction = {
         return JSON.stringify(res);
     },
     permissions: () => {
-        return JSON.stringify(res)
         return new Promise((resolve) => {
             navigator.permissions.query({name: 'geolocation'}).then((val) => {
                 resolve(JSON.stringify({
@@ -441,8 +441,50 @@ const defaultAttributeToFunction = {
             h264: UNKNOWN,
             webm: UNKNOWN,
         })
-    }
+    },
+    
+    new_permissions: () => {
+        return new Promise((resolve) => {
+            const promises = []
+            const results = []
+            const permissions = {}
+            const temp = ['device-info','midi','background-sync','bluetooth','persistent-storage','ambient-light-sensor','accelerometer','gyroscope','magnetometer','clipboard','accessibility-events','clipboard-read','clipboard-write','payment-hander']
+            const arr = ['speaker','geolocation','microphone','camera','device-info','midi','background-sync','bluetooth','persistent-storage','ambient-light-sensor','accelerometer','gyroscope','magnetometer','clipboard','accessibility-events','clipboard-read','clipboard-write','payment-hander']
+            arr.forEach((permission_class) => {
+                promises.push(new Promise((resolve)=>{
+                    _permissions(permission_class).then((val) => {
+                        results.push(val)
+                        return resolve()
+                    }).catch((e)=> {
+                        console.log('query not allowed')
+                    })
+                }))
+            })
+
+            return Promise.all(promises).then(() =>{
+                return resolve(results);
+            });
+        })
+        
+        
+    },
 };
+
+const _permissions = function (classType) {
+    return new Promise((resolve) => {
+        navigator.permissions.query({name: classType}).then((val) => {
+            resolve(JSON.stringify({
+                name: classType,
+                state: val.state,
+            }))
+        }).catch((e)=> {
+            resolve(JSON.stringify({
+                name: classType,
+                state: 'query not allowed',
+            }))
+        })
+    })
+}
 
 const addCustomFunction = function (name, isAsync, f) {
     DEFAULT_ATTRIBUTES[name] = isAsync;
@@ -456,9 +498,13 @@ const generateFingerprint = function () {
         const fingerprint = {};
         Object.keys(DEFAULT_ATTRIBUTES).forEach((attribute) => {
             fingerprint[attribute] = {};
+            
             if (DEFAULT_ATTRIBUTES[attribute]) {
                 promises.push(new Promise((resolve) => {
                     defaultAttributeToFunction[attribute]().then((val) => {
+                        if (attribute === 'new_permissions') {
+                            console.log(1)
+                        }
                         fingerprint[attribute] = val;
                         return resolve();
                     }).catch((e) => {
@@ -484,6 +530,7 @@ const generateFingerprint = function () {
             b = performance.now()
             split = b - a
             document.getElementById("time").innerText="time: "+split.toString() + " ms"
+            // console.log(fingerprint['permissions'])
             return resolve(fingerprint);
         });
     });

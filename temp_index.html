@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Canvas Fingerprinting - BrowserLeaks</title>
+    <meta name="description"
+        content="Browser Fingerprinting with no user agent identifiers, only through the HTML5 Canvas element. The method is based on the fact that the same canvas-code can produce different pixels on a different web browser, depending on the system on which it was executed.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://browserleaks.com/canvas">
+    <meta property="og:site_name" content="BrowserLeaks">
+    <meta property="og:title" content="Canvas Fingerprinting">
+    <meta property="og:description"
+        content="Browser Fingerprinting with no user agent identifiers, only through the HTML5 Canvas element. The method is based on the fact that the same canvas-code can produce different pixels on a different web browser, depending on the system on which it was executed.">
+    <link type="text/css" rel="stylesheet" media="all" href="/css/style.css?v=28880151"><noscript>
+        <style type="text/css">
+            .JS td,
+            .script {
+                opacity: .5
+            }
+
+            .js_hide_block {
+                display: block
+            }
+        </style>
+    </noscript>
+    <script>(function () { var a = '.doscript{display:block}.noscript{display:none!important}.script{opacity:1}', b = document.head || document.getElementsByTagName('head')[0], c = document.createElement('style'); c.type = 'text/css'; c.styleSheet ? c.styleSheet.cssText = a : c.appendChild(document.createTextNode(a)); b.appendChild(c) })()</script>
+    <script src="/js/jquery.min.js?v=32108433"></script>
+    <script src="/js/default.js?v=28880151"></script>
+    <link rel="icon" sizes="32x32" href="https://browserleaks.com/favicon.ico">
+    <link rel="icon" sizes="196x196" href="https://browserleaks.com/img/favicons/icon-196x196.png?v=32108433">
+    <link rel="apple-touch-icon" sizes="180x180"
+        href="https://browserleaks.com/img/favicons/apple-touch-icon.png?v=32108433">
+    <link rel="manifest" href="https://browserleaks.com/manifest.json?v=32108433">
+    <meta name="msapplication-config" content="https://browserleaks.com/browserconfig.xml?v=32108433">
+    <script>(function (i, s, o, g, r, a, m) { i['GoogleAnalyticsObject'] = r; i[r] = i[r] || function () { (i[r].q = i[r].q || []).push(arguments) }, i[r].l = 1 * new Date(); a = s.createElement(o), m = s.getElementsByTagName(o)[0]; a.async = 1; a.src = g; m.parentNode.insertBefore(a, m) })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga'); ga('create', 'UA-30278319-1', 'auto'); ga('send', 'pageview');</script>
+</head>
+
+<body spellcheck="false">
+    <div id="bg_hand"></div>
+    <div id="logo" class="responsive_hide"><a href="/" title="Home" tabindex="-1"><strong>BrowserLeaks</strong></a>
+    </div>
+    <nav aria-haspopup="true">
+        <div id="nav">
+            <div id="nav_pin" class="responsive_hide">
+                <form name="nav_pin_form" id="nav_pin_form" method="post" action="/canvas" onsubmit="return false">
+                    <input type="submit" id="nav_pin_submit" name="nav_pin_submit" value="1" title="Toggle Menu"></form>
+            </div>
+            <div id="nav_hover">
+                <div id="nav_menu"><input type="checkbox" autocomplete="off" aria-label="Menu" title="Menu"><span
+                        class="nav_hb"></span><span class="nav_hb"></span><span class="nav_hb"></span>
+                    <ul>
+                        <li>
+                            <div class="nav_close"></div>
+                        </li>
+                        <li class="margin"><a class="ico_index" href="/" title="Home Page" rel="nofollow">Home Page</a>
+                        </li>
+                        <li><a class="ico_ip" href="/ip" title="What Is My IP Address">IP Address</a></li>
+                        <li><a class="ico_javascript" href="/javascript"
+                                title="JavaScript Browser Information">JavaScript</a></li>
+                        <li><a class="ico_webrtc" href="/webrtc" title="WebRTC Leak Test">WebRTC Leak Test</a></li>
+                        <li><a class="this ico_canvas" href="/canvas" title="HTML5 Canvas Fingerprinting"
+                                rel="nofollow">Canvas Fingerprint</a></li>
+                        <li><a class="ico_webgl" href="/webgl" title="WebGL Browser Report">WebGL Report</a></li>
+                        <li class="margin"><a class="ico_fonts" href="/fonts" title="Font Fingerprinting">Font
+                                Fingerprinting</a></li>
+                        <li><a class="ico_ssl" href="/ssl" title="SSL/TLS Client Security Test">SSL Client Test</a></li>
+                        <li><a class="ico_geo" href="/geo"
+                                title="HTML5 Geolocation API and Reverse Geocoding">Geolocation API</a></li>
+                        <li><a class="ico_features" href="/features" title="HTML5 Features Detection">Features
+                                Detection</a></li>
+                        <li><a class="ico_proxy" href="/proxy"
+                                title="Content Filtering Proxy Software Detection">Content Filters</a></li>
+                        <li><a class="ico_java" href="/java" title="Java VM System Properties">Java Applet</a></li>
+                        <li><a class="ico_flash" href="/flash" title="Flash Player Browser Info">Flash Player</a></li>
+                        <li class="margin_less"><a class="ico_silverlight" href="/silverlight"
+                                title="Silverlight Browser Info">Silverlight</a></li>
+                        <li class="margin_less"><a class="ico_more" href="https://browserleaks.com/#more"
+                                title="More Tools" rel="nofollow">More Tools</a></li>
+                        <li><a class="ico_settings" href="/settings" title="Site Settings" rel="nofollow">Settings</a>
+                        </li>
+                    </ul>
+                    <div class="nav_dark"></div>
+                </div>
+            </div>
+        </div>
+    </nav>
+    <div class="responsive_header responsive_show">
+        <div class="responsive_home"><a href="/" title="Home">
+                <div class="svg_icon svg_fingerprint"></div>
+            </a></div>
+        <div class="responsive_search">
+            <div class="responsive_search_icon svg_icon svg_search"></div>
+        </div>
+        <div class="responsive_search_form n"><input type="search" class="responsive_search_input" maxlength="1337"
+                aria-label="Enter IP Address or Domain Name" placeholder="Enter IP Address or Domain Name"><input
+                type="button" class="responsive_search_submit n" value=""></div>
+    </div>
+    <div id="content">
+        <div id="lookup_form" class="responsive_hide">
+            <form action="/search" method="POST">
+                <ul>
+                    <li><input tabindex="2" aria-label="IP Address Lookup" placeholder="IP Address Lookup" type="text"
+                            id="lookup_input" class="placeholder" name="data" title="Enter IP Address or Domain Name"
+                            maxlength="1337"></li>
+                    <li><input tabindex="3" type="submit" id="lookup_submit" class="svg_search" name="lookup_submit"
+                            value="" title="Submit"></li>
+                </ul>
+            </form>
+        </div>
+        <div id="canvas_fingerprint" class="JS">
+            <header>
+                <h1><a href="/canvas">HTML5 Canvas Fingerprinting</a></h1>
+            </header>
+            <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script><ins
+                data-html2canvas-ignore class="adsbygoogle orientationchange" data-ad-client="ca-pub-4594829972910700"
+                data-ad-slot="6326594570"></ins>
+            <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+            <p>Canvas is an HTML5 API that is used to draw graphics and animations on a web page via scripting in
+                JavaScript.</p>
+            <p>But apart from this, the canvas can be used as additional entropy in the web browser's fingerprinting and
+                used for online tracking purposes.</p>
+            <p>The technique is based on the fact that the same canvas image may be rendered differently on different
+                computers. This happens for several reasons. At the image format level – web browsers use different
+                image processing engines, image export options, compression level, the final images may get different
+                checksum even if they are pixel-identical. At the system level – operating systems have different fonts,
+                they use different algorithms and settings for anti-aliasing and sub-pixel rendering.</p>
+            <p>Below you can see if the Canvas is supported in your web browser and check whether this technique can
+                keep track of you. In addition, a little continuing research will show how really unique and persistent
+                Canvas Fingerprint in real life, and whether your signature in the BrowserLeaks database (nothing is
+                collected right here!).</p>
+            <div class="noscript warn">JavaScript Disabled</div>
+            <table id="canvas_data" class="script">
+                <tbody>
+                    <tr class="thead">
+                        <td colspan="5">
+                            <h3>Canvas Support in Your Browser</h3>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Canvas (basic support)</td>
+                        <td id="is_canvas"><span class="unknown">?</span></td>
+                    </tr>
+                    <tr>
+                        <td>Text API for Canvas</td>
+                        <td id="is_canvas_text"><span class="unknown">?</span></td>
+                    </tr>
+                    <tr>
+                        <td>Canvas toDataURL</td>
+                        <td id="is_canvas_todataurl"><span class="unknown">?</span></td>
+                    </tr>
+                    <tr class="thead tpadd">
+                        <td colspan="5">
+                            <h3>Database Summary</h3>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="nbsp6">Unique User-Agents</td>
+                        <td colspan="4" id="db_sets">901701</td>
+                    </tr>
+                    <tr>
+                        <td>Unique Fingerprints</td>
+                        <td colspan="4">271996</td>
+                    </tr>
+                    <tr class="thead tpadd tbold">
+                        <td>
+                            <h3>Your Fingerprint</h3>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Signature</td>
+                        <td id="crc">n/a</td>
+                    </tr>
+                    <tr>
+                        <td>Uniqueness</td>
+                        <td id="crc_detect">
+                            <div id="load" class="none"></div><span class="noscript">n/a</span>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <table id="canvas_file" class="responsive_scroll none">
+                <tr class="thead">
+                    <td class="vb">
+                        <h3>Image File Details</h3>
+                    </td>
+                    <td colspan="4">
+                        <div id="canvas_img"></div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>File Size</td>
+                    <td colspan="4" id="canvas_file_size"></td>
+                </tr>
+                <tr>
+                    <td>Number of Colors</td>
+                    <td colspan="4" id="canvas_file_colors"></td>
+                </tr>
+                <tr>
+                    <td>PNG Hash</td>
+                    <td colspan="4" id="canvas_file_md5"></td>
+                </tr>
+                <tr>
+                    <td class="responsive_hide">PNG Headers</td>
+                    <td class="thead br">
+                        <h3>Chunk</h3>
+                    </td>
+                    <td class="thead br">
+                        <h3>Length</h3>
+                    </td>
+                    <td class="thead br">
+                        <h3>CRC</h3>
+                    </td>
+                    <td class="thead">
+                        <h3>Content</h3>
+                    </td>
+                </tr>
+                </tbody>
+                <tbody id="canvas_png" class="none">
+            </table>
+            <table id="canvas_stats" class="wball none">
+                <tr class="thead">
+                    <td colspan="6">
+                        <h3>Browser Statistics</h3>
+                    </td>
+                </tr>
+                <tr>
+                    <td id="crc_verdict" class="none">Looking at your signature, it's very likely that your web browser
+                        is <span id="crc_verdict_ua">Web Browser</span> and your operating system is <span
+                            id="crc_verdict_os">Operating System</span>.</td>
+                </tr>
+            </table>
+            <table id="canvas_table" class="responsive_scroll none"></table>
+            <div data-html2canvas-ignore id="canvas_warn_browser" class="info none">Browser Detection via Canvas is very
+                rude and nominal, based just on parsing User-Agents. Don't be surprised if your signature refers to
+                Windows as well as Android (for example). It does not happen. Just someone used UA-spoofing or device
+                emulation on a websites, which is collecting the database. We could use more accurate sources of data
+                (TCP/Flash/etc) to compile more reliable correlation between Canvas Fingerprint and Browser/OS, just it
+                was not a main goal, also it would require further action from webmasters who agreed to put our code to
+                collect data on their websites.</div>
+            <h3 class="section" id="how-does-it-work" name="how-does-it-work"><a href="#how-does-it-work"
+                    title="Click to expand">How Does It Work</a></h3>
+            <div class="noscript">
+                <p>Unlike the other «browser detection» tricks, this deals with many OS features related to the graphics
+                    environment. Potentially it can be used to identify the video adapter, especially if you will use <a
+                        href="/webgl" title="WebGL Browser Report" target="_blank">WebGL</a> profiling, not just Canvas
+                    2D Context. By the way, different graphics card drivers can also sometimes affect to regular fonts
+                    rendering.</p>
+                <p>This tiny animated GIF shows how canvas images can be variable from 35 different users. The code is
+                    not changed, but each frame is different:</p>
+                <picture id="canvas_picture">
+                    <source srcset="/img/canvas/canvas-fingerprinting.png?v=32108433" type="image/apng">
+                    <source srcset="/img/canvas/canvas-fingerprinting.webp?v=32108433" type="image/webp"><img
+                        src="/img/canvas/canvas-fingerprinting.gif?v=32108433" alt="Canvas Fingerprinting">
+                </picture>
+                <p>As you can see from our Database Summary, the number of unique images that we have been able to
+                    collect is a few thousand for now.</p>
+                <p>Here is the JavaScript code that produces the pixels:</p>
+                <ol class="code" contenteditable="true" spellcheck="false">
+                    <li><span><span class="c">// Text with lowercase/uppercase/punctuation symbols</span></span></li>
+                    <li><span><span class="z">var</span> txt = <span class="x">"BrowserLeaks,com &lt;canvas&gt;
+                                1.0"</span>;</span></li>
+                    <li><span>ctx.textBaseline = <span class="x">"top"</span>;</span></li>
+                    <li><span><span class="c">// The most common type</span></span></li>
+                    <li><span>ctx.font = <span class="x">"14px 'Arial'"</span>;</span></li>
+                    <li><span>ctx.textBaseline = <span class="x">"alphabetic"</span>;</span></li>
+                    <li><span>ctx.fillStyle = <span class="x">"#f60"</span>;</span></li>
+                    <li><span>ctx.fillRect(125,1,62,20);</span></li>
+                    <li><span><span class="c">// Some tricks for color mixing to increase the difference in
+                                rendering</span></span></li>
+                    <li><span>ctx.fillStyle = <span class="x">"#069"</span>;</span></li>
+                    <li><span>ctx.fillText(txt, 2, 15);</span></li>
+                    <li><span>ctx.fillStyle = <span class="x">"rgba(102, 204, 0, 0.7)"</span>;</span></li>
+                    <li><span>ctx.fillText(txt, 4, 17);</span></li>
+                </ol>
+                <p>To create a signature from the canvas, we must export the pixels from the application's memory using
+                    the toDataURL() function, which will return the base64-encoded string of the binary image file. Then
+                    we can just create an MD5 hash of this string, or even extract CRC checksum from IDAT chunk which is
+                    placed from 16 to 12 byte from the end of every PNG file, and this will be our Canvas Fingerprint.
+                </p>
+            </div>
+            <h3 class="section nohistory" id="further-reading" name="further-reading"><a href="#further-reading"
+                    title="Click to expand">Further Reading</a></h3>
+            <div class="noscript">
+                <ul class="list">
+                    <li><a href="https://www.useragentman.com/blog/2009/11/29/how-to-detect-font-smoothing-using-javascript/"
+                            rel="noopener" target="_blank">How to Detect Font-Smoothing Using JavaScript</a>
+                        <p class="short">The first article about the difference in rendering pixels. Not about
+                            fingerprinting, but just after this article it became clear to us that something similar can
+                            be done.</p>
+                    </li>
+                    <li><a href="https://hovav.net/ucsd/dist/canvas.pdf" rel="noopener" target="_blank">Pixel Perfect:
+                            Fingerprinting Canvas in HTML5</a>
+                        <p class="short">A well-known study, after which the topic has become known to the public.</p>
+                    </li>
+                    <li><a href="https://github.com/Valve/fingerprintjs2" rel="noopener"
+                            target="_blank">Fingerprintjs2</a>
+                        <p class="short">GitHub project that uses original our original code for their canvas
+                            fingerprinting function (huh, so many people have asked for <a
+                                href="https://github.com/Valve/fingerprintjs/issues/8" rel="noopener"
+                                target="_blank">proof</a>).</p>
+                    </li>
+                    <li><a href="https://securehomes.esat.kuleuven.be/~gacar/persistent/" rel="noopener"
+                            target="_blank">The Web never forgets: Persistent tracking mechanisms in the wild</a>
+                        <p class="short">And now it is used by thousands of sites...</p>
+                    </li>
+                    <li><a href="https://addons.mozilla.org/en-US/firefox/addon/canvasblocker/" rel="noopener"
+                            target="_blank">CanvasBlocker</a>
+                        <p class="short">Firefox add-on that changes the JS-API for modifying &lt;canvas&gt; to prevent
+                            Canvas Fingerprinting.</p>
+                    </li>
+                    <li><a href="https://en.wikipedia.org/wiki/Canvas_fingerprinting" rel="noopener"
+                            target="_blank">Canvas Fingerprinting – Wikipedia</a></li>
+                    <li><a href="https://developer.mozilla.org/en-US/docs/HTML/Canvas" rel="noopener"
+                            target="_blank">HTML5 Canvas – MDN</a></li>
+                    <li><a href="https://caniuse.com/#search=canvas" rel="noopener" target="_blank">Compatibility tables
+                            for support of Canvas & WebGL in desktop and mobile browsers – Can I Use</a></li>
+                </ul>
+            </div>
+        </div><iframe id="canvas_iframe" sandbox="allow-same-origin"></iframe>
+        <script>var rnd = "57f63dfb3d5d98469f7dbbcfede9c9af"</script>
+        <script src="/js/canvas.js?v=28880151"></script><ins data-html2canvas-ignore
+            class="adsbygoogle orientationchange" data-ad-client="ca-pub-4594829972910700"
+            data-ad-slot="1034739448"></ins>
+        <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+        <h3 data-html2canvas-ignore id="comments"><span class="comments_title">Leave a Comment</span> <span
+                class="comments_count">(151)</span><span id="comments_nojs" class="noscript"></span></h3>
+        <script>var disqus_identifier = "canvas", disqus_config = function () { this.page.url = "https://browserleaks.com/canvas"; this.callbacks.onReady.push(function () { document.getElementById("comments_autoload").className = "responsive_hide" }); }</script>
+        <div data-html2canvas-ignore id="comments_autoload" class="responsive_hide n">
+            <div><span><input type="checkbox" id="comments_autoload_input"><label for="comments_autoload_input">Always
+                        Show Comments</label></span></div>
+        </div>
+        <div data-html2canvas-ignore id="disqus_thread" style="overflow:hidden"></div>
+        <footer>
+            <div id="footer">
+                <div>BrowserLeaks &copy; 2011-2022 All Right Reserved<br><span id="bdo"><bdo dir="rtl">&#x6d;
+                            <!-- ` -->&#x6f;&#x63;<span>&period;&#x73;&#x6b;
+                                <!-- ` -->&#x61;&#x65;
+                            </span>&#x6c;&#x72;
+                            <!-- ` -->&#x65;&#x73;<span>&#x77;&#x6f;&#x72;
+                                <!-- ` -->&#x62;&#64;&#x6e;
+                            </span>&#x69;&#x6d;
+                            <!-- ` -->&#x64;&#x61;
+                        </bdo></span></div>
+            </div>
+        </footer>
+    </div>
+</body>
+
+</html>
