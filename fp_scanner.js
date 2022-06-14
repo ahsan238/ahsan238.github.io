@@ -196,7 +196,6 @@ const defaultAttributeToFunction = {
     speech_synthesis: () => {
         if(typeof speechSynthesis.getVoices() !== 'undefined') {
             const voices = speechSynthesis.getVoices();
-            console.log(voices)
             return voices
         } else {
             return []

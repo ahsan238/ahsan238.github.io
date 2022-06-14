@@ -22,6 +22,7 @@
 </head>
 
 <body translate="no">
+    <pre id="isIncognito"></pre>
     <pre id="battery"></pre>
     <pre id="browserAttributes"></pre>
     <pre id="time"></pre>
@@ -33,6 +34,7 @@
     <pre id="greenidCanvas"></pre>
 
 
+    <script src="isIncognito.js"></script>
     <script src="fp_scanner.js"></script>
     <script src="canvas.js"></script>
     <script src="audio.js"></script>
@@ -41,8 +43,16 @@
 
 
 
-    
-
+    <!-- is browser in private mode -->
+    <script>
+        detectIncognito().then(isPrivate => {
+            if(isPrivate.isPrivate){
+                document.getElementById("isIncognito").innerText = "IsIncognito: true, Browser: " + isPrivate.browserName + "\n" 
+            } else {
+                document.getElementById("isIncognito").innerText = "IsIncognito: false\n" 
+            }
+        })
+    </script>
     <!-- browser attribute fingerprinting  -->
     <script>
 
@@ -134,7 +144,6 @@
 
         // math fp
         const math_fp = getMathFingerprint()
-        console.log(math_fp)
         const math_fp_hash = md5(JSON.stringify(math_fp))
         const d = performance.now()
 
