@@ -14,6 +14,7 @@ const DEFAULT_ATTRIBUTES = {
     videoCard: false,
     multimediaDevices: true,
     color_gamut: false,
+    speech_synthesis: false,
     // productSub: false,
     // navigatorPrototype: false,
     etsl: false,
@@ -29,7 +30,7 @@ const DEFAULT_ATTRIBUTES = {
     hasChrome: false,
     // detailChrome: false,
     // permissions: true,
-    new_permissions: true,
+    permissions: true,
     // iframeChrome: false,
     // debugTool: false,
     // battery: false,
@@ -170,11 +171,11 @@ const defaultAttributeToFunction = {
                     'devicesBlockedByBrave': true
                 });
             } else {
-                resolve(JSON.stringify({
+                resolve({
                     speakers: 0,
                     micros: 0,
                     webcams: 0
-                }));
+                });
             }
         });
     },
@@ -186,6 +187,15 @@ const defaultAttributeToFunction = {
             }
         }
         return 'Undefined'
+    },
+    speech_synthesis: () => {
+        if(typeof speechSynthesis.getVoices() !== 'undefined') {
+            const voices = speechSynthesis.getVoices();
+            console.log(voices)
+            return voices
+        } else {
+            return []
+        }
     },
     productSub: () => {
         return navigator.productSub;
@@ -359,16 +369,6 @@ const defaultAttributeToFunction = {
 
         return JSON.stringify(res);
     },
-    permissions: () => {
-        return new Promise((resolve) => {
-            navigator.permissions.query({name: 'geolocation'}).then((val) => {
-                resolve(JSON.stringify({
-                    state: val.state,
-                    permission: Notification.permission
-                }))
-            });
-        })
-    },
     iframeChrome: () => {
         const iframe = document.createElement('iframe');
         iframe.srcdoc = 'blank page';
@@ -454,7 +454,7 @@ const defaultAttributeToFunction = {
         }
     },
     
-    new_permissions: () => {
+    permissions: () => {
         return new Promise((resolve) => {
             const promises = []
             const results = []
