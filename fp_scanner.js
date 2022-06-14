@@ -28,6 +28,11 @@ const DEFAULT_ATTRIBUTES = {
     accelerometerUsed: true,
     screenMediaQuery: false,
     hasChrome: false,
+    hasYandex: false,
+    hasOpera: false,
+    hasMaxthon: false,
+    hasFirefox: false,
+    hasSilk: false,
     // detailChrome: false,
     // permissions: true,
     permissions: true,
@@ -342,6 +347,21 @@ const defaultAttributeToFunction = {
     },
     hasChrome: () => {
         return !!window.chrome;
+    },
+    hasYandex: () => {
+        return !!window.yandex;
+    },
+    hasOpera: () => {
+        return !!window.opera;
+    },
+    hasMaxthon: () => {
+        return window.mxZoomFactor;
+    },
+    hasSilk: () => {
+        return !!window.com_amazon_cloud9_immersion
+    },
+    hasFirefox: () => {
+        return typeof(InstallTrigger) !== "undefined"
     },
     detailChrome: () => {
         if (!window.chrome) return UNKNOWN;
