@@ -64,14 +64,15 @@
 
 
             generateFingerprint().then((fp) => {
-                resultString = ""
-                for (var key in fp) {
-                    if (fp[key] !== undefined) {
-                        resultString += key + ": " + fp[key].toString() + '\n';
-                    } else {
-                        resultString += key + ": " + "UNDEFINED" + '\n';
-                    }
-                }
+                // resultString = ""
+                // for (var key in fp) {
+                //     if (fp[key] !== undefined) {
+                //         resultString += key + ": " + fp[key].toString() + '\n';
+                //     } else {
+                //         resultString += key + ": " + "UNDEFINED" + '\n';
+                //     }
+                // }
+                resultString = JSON.stringify(fp,null,2)
                 document.getElementById("browserAttributes").innerText = resultString
             })
         }
@@ -85,7 +86,10 @@
 
         // green id hash
         const res = GetCanvasData()
-        document.getElementById("greenidCanvas").innerText = "Green iD canvas hash: "+ res.modern['iduh']
+        if (res["legacy"].hasOwnProperty("img")) {
+            delete res["legacy"]["img"]
+        }
+        document.getElementById("greenidCanvas").innerText = "Green iD canvas hash: "+ res.modern['iduh'] +"\n"+JSON.stringify(res)
 
         // picasso hash
         const params = {
@@ -125,10 +129,16 @@
     <!-- Audio & Math FP -->
     <script>
         const c = performance.now()
+        // audio fp
         const audio_fp = audioFp()
+
+        // math fp
         const math_fp = getMathFingerprint()
+        console.log(math_fp)
         const math_fp_hash = md5(JSON.stringify(math_fp))
         const d = performance.now()
+
+        // time to compute
         const diff = d-c
         document.getElementById("mathFP").innerText = "Math FP: " + math_fp_hash + "\ntotal time for Math and Audio FP: " + diff + 'ms \n'
 

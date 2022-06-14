@@ -2,15 +2,18 @@ const UNKNOWN = 'unknown';
 const ERROR = 'error';
 
 const DEFAULT_ATTRIBUTES = {
-    // plugins: false,
-    // mimeTypes: false,
-    // userAgent: false,
-    // platform: false,
+    plugins: false,
+    mimeTypes: false,
+    userAgent: false,
+    platform: false,
+    // webDriver: false,
+    // webDriverValue: false,
     languages: false,
     screen: false,
     touchScreen: false,
     videoCard: false,
     multimediaDevices: true,
+    color_gamut: false,
     // productSub: false,
     // navigatorPrototype: false,
     etsl: false,
@@ -18,8 +21,7 @@ const DEFAULT_ATTRIBUTES = {
     phantomJS: false,
     nightmareJS: false,
     selenium: false,
-    // webDriver: false,
-    // webDriverValue: false,
+    
     // errorsGenerated: false,
     // resOverflow: false,
     accelerometerUsed: true,
@@ -77,7 +79,7 @@ const defaultAttributeToFunction = {
         return UNKNOWN;
     },
     screen: () => {
-        return JSON.stringify({
+        return {
             wInnerHeight: window.innerHeight,
             wOuterHeight: window.outerHeight,
             wOuterWidth: window.outerWidth,
@@ -94,7 +96,7 @@ const defaultAttributeToFunction = {
             sColorDepth: screen.colorDepth,
             sPixelDepth: screen.pixelDepth,
             wDevicePixelRatio: window.devicePixelRatio
-        });
+        };
     },
     touchScreen: () => {
         let maxTouchPoints = 0;
@@ -148,17 +150,17 @@ const defaultAttributeToFunction = {
                         name = [devices[i].kind];
                         deviceToCount[name] = deviceToCount[name] + 1;
                     }
-                    resolve(JSON.stringify({
+                    resolve({
                         speakers: deviceToCount.audiooutput,
                         micros: deviceToCount.audioinput,
                         webcams: deviceToCount.videoinput
-                    }));
+                    });
                     } else {
-                        resolve(JSON.stringify({
+                        resolve({
                             speakers: 0,
                             micros: 0,
                             webcams: 0
-                        }));
+                        });
                     }
 
                 });
@@ -175,6 +177,15 @@ const defaultAttributeToFunction = {
                 }));
             }
         });
+    },
+    color_gamut: () => {
+        const color_gamuts = ['rec2020', 'p3', 'srgb']
+        for (var i in color_gamuts) {
+            if (matchMedia(`(color-gamut: ${color_gamuts[i]})`).matches) {
+                return color_gamuts[i]
+            }
+        }
+        return 'Undefined'
     },
     productSub: () => {
         return navigator.productSub;
@@ -410,43 +421,47 @@ const defaultAttributeToFunction = {
         const audioElt = document.createElement("audio");
 
         if (audioElt.canPlayType) {
-            return JSON.stringify({
+            return {
                 ogg: audioElt.canPlayType('audio/ogg; codecs="vorbis"'),
                 mp3: audioElt.canPlayType('audio/mpeg;'),
                 wav: audioElt.canPlayType('audio/wav; codecs="1"'),
                 m4a: audioElt.canPlayType('audio/x-m4a;'),
                 aac: audioElt.canPlayType('audio/aac;'),
-            })
+            }
         }
-        return JSON.stringify({
+        return {
             ogg: UNKNOWN,
             mp3: UNKNOWN,
             wav: UNKNOWN,
             m4a: UNKNOWN,
             aac: UNKNOWN
-        });
+        };
     },
     videoCodecs: () => {
         const videoElt = document.createElement("video");
 
         if (videoElt.canPlayType) {
-            return JSON.stringify({
+            return {
                 ogg: videoElt.canPlayType('video/ogg; codecs="theora"'),
                 h264: videoElt.canPlayType('video/mp4; codecs="avc1.42E01E"'),
                 webm: videoElt.canPlayType('video/webm; codecs="vp8, vorbis"'),
-            })
+            }
         }
-        return JSON.stringify({
+        return {
             ogg: UNKNOWN,
             h264: UNKNOWN,
             webm: UNKNOWN,
-        })
+        }
     },
     
     new_permissions: () => {
         return new Promise((resolve) => {
             const promises = []
             const results = []
+            // safari does not support permissions
+            if (typeof navigator.permissions === "undefined") {
+                return resolve(results)
+            }
             const permissions = {}
             const temp = []
             const arr = ['speaker','geolocation','microphone','camera','device-info','midi','background-sync','bluetooth','persistent-storage','ambient-light-sensor','accelerometer','gyroscope','magnetometer','clipboard','accessibility-events','clipboard-read','clipboard-write','payment-hander']
@@ -473,15 +488,15 @@ const defaultAttributeToFunction = {
 const _permissions = function (classType) {
     return new Promise((resolve) => {
         navigator.permissions.query({name: classType}).then((val) => {
-            resolve(JSON.stringify({
+            resolve({
                 name: classType,
                 state: val.state,
-            }))
+            })
         }).catch((e)=> {
-            resolve(JSON.stringify({
+            resolve({
                 name: classType,
                 state: 'query not allowed',
-            }))
+            })
         })
     })
 }
