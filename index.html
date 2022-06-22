@@ -28,6 +28,8 @@
     <pre id="time"></pre>
     <pre id="audioFP"></pre>
     <pre id="mathFP"></pre>
+    <pre id="js_echo"></pre>
+    <!-- <text id="svgText" >JSEcho svgText</text> -->
     <!-- <canvas id="myCanvas"></canvas> -->
 
     <div style="text-align:left;" id="canvasgenerated"></div>
@@ -41,6 +43,7 @@
     <script src="greenidCanvas.js"></script>
     <script src="math.js"></script>
     <script src="src/webgl.js"></script>
+    <script src="src/js_echo.js"></script>
 
 
 
@@ -100,7 +103,7 @@
         if (res["legacy"].hasOwnProperty("img")) {
             delete res["legacy"]["img"]
         }
-        // document.getElementById("greenidCanvas").innerText = "Green iD canvas hash: "+ res.modern['iduh'] +"\n"+JSON.stringify(res)
+        document.getElementById("greenidCanvas").innerText = "Green iD canvas: "+ res.modern['iduh'] +"\n"
 
         // picasso hash
         const params = {
@@ -128,7 +131,7 @@
         if (canvasValue.indexOf('base64') > -1) {
             const img = document.createElement('img');
             img.src = canvasValue;
-            document.getElementById('canvasgenerated').innerHTML = `<pre>Picasso hash: ${x64hash128(canvasValue, initialSeed)}</pre>`;
+            document.getElementById('canvasgenerated').innerHTML = `<pre>Picasso: ${x64hash128(canvasValue, initialSeed)}</pre>`;
             // document.getElementById('canvasgenerated').appendChild(img);
         } else {
             document.getElementById('canvasgenerated').innerHTML = '<h2 class="alert alert-danger">An error occured</h2>';
@@ -139,6 +142,9 @@
 
     <!-- Audio & Math FP -->
     <script>
+        
+
+
         const c = performance.now()
         // audio fp
         const audio_fp = audioFp()
@@ -151,7 +157,7 @@
         // time to compute
         const diff = d-c
         document.getElementById("mathFP").innerText = "Math FP: " + math_fp_hash +'\n'
-
+        jsEcho()
         
     </script>
 
