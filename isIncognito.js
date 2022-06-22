@@ -1,3 +1,5 @@
+// https://github.com/Joe12387/detectIncognito/blob/main/dist/detectIncognito.js
+
 function detectIncognito() {
     return new Promise(function (resolve, reject) {
         var browserName = "Unknown";

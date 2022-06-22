@@ -2,22 +2,22 @@ const UNKNOWN = 'unknown';
 const ERROR = 'error';
 
 const DEFAULT_ATTRIBUTES = {
-    plugins: false,
-    mimeTypes: false,
-    userAgent: false,
-    platform: false,
+    // plugins: false,
+    // mimeTypes: false,
+    // userAgent: false,
+    // platform: false,
     // webDriver: false,
     // webDriverValue: false,
     languages: false,
     screen: false,
     touchScreen: false,
     videoCard: false,
-    multimediaDevices: true,
+    // multimediaDevices: true,
     color_gamut: false,
-    speech_synthesis: false,
+    // speech_synthesis: false,
     // productSub: false,
     // navigatorPrototype: false,
-    etsl: false,
+    // etsl: false,
     // screenDesc: false,
     phantomJS: false,
     nightmareJS: false,
@@ -35,15 +35,15 @@ const DEFAULT_ATTRIBUTES = {
     hasSilk: false,
     // detailChrome: false,
     // permissions: true,
-    permissions: true,
+    // permissions: true,
     // iframeChrome: false,
     // debugTool: false,
     // battery: false,
     deviceMemory: false,
     // tpCanvas: true,
     sequentum: false,
-    audioCodecs: false,
-    videoCodecs: false
+    // audioCodecs: false,
+    // videoCodecs: false
 };
 
 const defaultAttributeToFunction = {
@@ -560,7 +560,7 @@ const generateFingerprint = function () {
         return Promise.all(promises).then(() => {
             const b = performance.now()
             split = b - a
-            document.getElementById("time").innerText="time: "+split.toString() + " ms"
+            // document.getElementById("time").innerText="time: "+split.toString() + " ms"
             // console.log(fingerprint['permissions'])
             return resolve(fingerprint);
         });
