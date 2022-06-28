@@ -29,6 +29,7 @@
     <pre id="audioFP"></pre>
     <pre id="mathFP"></pre>
     <pre id="js_echo"></pre>
+    <pre id="system_colors"></pre>
     <!-- <text id="svgText" >JSEcho svgText</text> -->
     <!-- <canvas id="myCanvas"></canvas> -->
 
@@ -44,6 +45,7 @@
     <script src="math.js"></script>
     <script src="src/webgl.js"></script>
     <script src="src/js_echo.js"></script>
+    <script src="src/system_colors.js   "></script>
 
 
 
@@ -157,7 +159,9 @@
         // time to compute
         const diff = d-c
         document.getElementById("mathFP").innerText = "Math FP: " + math_fp_hash +'\n'
-        jsEcho()
+        // jsEcho()
+        var sys_colors = getSystemColors()
+        document.getElementById("system_colors").innerText = "System Colors Hash: "+sys_colors
         
     </script>
 
