@@ -1,172 +1,40 @@
-<!-- https://antoinevastel.com/browser%20fingerprinting/2019/03/21/picasso-canvas-fingerprinting.html -->
-<!-- https://elie.net/static/files/picasso-lightweight-device-class-fingerprinting-for-web-clients/picasso-lightweight-device-class-fingerprinting-for-web-clients-paper.pdf -->
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-
     <meta charset="UTF-8">
-
-    <title>Fingerprint Scanner</title>
-
-    <style>
-        h1 {
-            margin-bottom: 35px;
-            margin-top: 10px;
-        }
-
-        #canvasgenerated {
-            margin-top: 40px;
-        }
-    </style>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css" integrity="sha384-5sAR7xN1Nv6T6+dT2mhtzEpVJvfS3NScPQTrOxhwjIuvcA67KV2R5Jz6kr4abQsz" crossorigin="anonymous">
+    <link rel="stylesheet" href="style.css">
+    <title>Your Name</title>
 </head>
+<body>
+    <div class="grid-2">
+        <div class="section-1">
+            <i class="fas fa-code fa-5x white"></i>
+            <h2>FirstName LastName</h2>
+            <p>City,Country.</p>
+            <a href="#"><i class="fab fa-twitter"></i></a>
+            <a href="#"><i class="fab fa-linkedin"></i></a>
+            <a href="#"><i class="fab fa-github"></i></a>
+        </div>
+        <div class="section-2">
+            <h2>About</h2>
+            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Perferendis quas sint et nihil iusto eius nostrum sit error, repellat optio quisquam! Magnam dolore iusto cumque. Nostrum error iste neque maiores.</p>
+            <h2>Experience</h2>
+            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Reiciendis in maiores autem quidem.</p>
 
-<body translate="no">
-    <pre id="isIncognito"></pre>
-    <pre id="battery"></pre>
-    <pre id="browserAttributes"></pre>
-    <pre id="time"></pre>
-    <pre id="audioFP"></pre>
-    <pre id="mathFP"></pre>
-    <pre id="js_echo"></pre>
-    <pre id="system_colors"></pre>
-    <!-- <text id="svgText" >JSEcho svgText</text> -->
-    <!-- <canvas id="myCanvas"></canvas> -->
-
-    <div style="text-align:left;" id="canvasgenerated"></div>
-    <pre id="greenidCanvas"></pre>
-
-
-    <script src="isIncognito.js"></script>
-    <script src="fp_scanner.js"></script>
-    <script src="canvas.js"></script>
-    <script src="audio.js"></script>
-    <script src="greenidCanvas.js"></script>
-    <script src="math.js"></script>
-    <script src="src/webgl.js"></script>
-    <script src="src/js_echo.js"></script>
-    <script src="src/system_colors.js   "></script>
-
-
-
-    <!-- is browser in private mode -->
-    <script>
-        detectIncognito().then(isPrivate => {
-            if(isPrivate.isPrivate){
-                document.getElementById("isIncognito").innerText = "IsIncognito: true, Browser: " + isPrivate.browserName + "\n" 
-            } else {
-                document.getElementById("isIncognito").innerText = "IsIncognito: maybe\n" 
-            }
-        })
-    </script>
-    <!-- browser attribute fingerprinting  -->
-    <script>
-
-        async function prepareAndGo() {
-            const res = generateFingerprint()
-            display_fp()
-        }
-
-        async function display_fp(fp) {
-            // battery status may not be an option on Safari
-            if (typeof navigator.getBattery === 'function') {
-                navigator.getBattery().then(function (battery) {
-                    document.getElementById("battery").innerText = "battery level: " + battery.level
-                })
-                    .catch((e) => {
-                        console.log(e)
-                    })
-            }
-
-
-            generateFingerprint().then((fp) => {
-                // resultString = ""
-                // for (var key in fp) {
-                //     if (fp[key] !== undefined) {
-                //         resultString += key + ": " + fp[key].toString() + '\n';
-                //     } else {
-                //         resultString += key + ": " + "UNDEFINED" + '\n';
-                //     }
-                // }
-                resultString = JSON.stringify(fp,null,2)
-                document.getElementById("browserAttributes").innerText = resultString
-            })
-        }
-
-        window.onload = prepareAndGo;
-
-    </script>
-
-    <!-- canvas fingerprinting -->
-    <script>
-
-        // green id hash
-        const res = GetCanvasData()
-        if (res["legacy"].hasOwnProperty("img")) {
-            delete res["legacy"]["img"]
-        }
-        document.getElementById("greenidCanvas").innerText = "Green iD canvas: "+ res.modern['iduh'] +"\n"
-
-        // picasso hash
-        const params = {
-            area: {
-                width: 300,
-                height: 300,
-            },
-            offsetParameter: 2001000001,
-            fontSizeFactor: 1.5,
-            multiplier: 15000,
-            maxShadowBlur: 50,
-        };
-        const numShapes = 5;
-        // const initialSeed = Math.floor(100 * Math.random());
-        const initialSeed = 42;
-
-        const start = performance.now();
-
-        const canvasValue = picassoCanvas(
-            numShapes, initialSeed, params
-        );
-
-        const end = performance.now();
-        // console.log(canvasValue)
-        if (canvasValue.indexOf('base64') > -1) {
-            const img = document.createElement('img');
-            img.src = canvasValue;
-            document.getElementById('canvasgenerated').innerHTML = `<pre>Picasso: ${x64hash128(canvasValue, initialSeed)}</pre>`;
-            // document.getElementById('canvasgenerated').appendChild(img);
-        } else {
-            document.getElementById('canvasgenerated').innerHTML = '<h2 class="alert alert-danger">An error occured</h2>';
-        }
-
-        
-    </script>
-
-    <!-- Audio & Math FP -->
-    <script>
-        
-
-
-        const c = performance.now()
-        // audio fp
-        const audio_fp = audioFp()
-
-        // math fp
-        const math_fp = getMathFingerprint()
-        const math_fp_hash = md5(JSON.stringify(math_fp))
-        const d = performance.now()
-
-        // time to compute
-        const diff = d-c
-        document.getElementById("mathFP").innerText = "Math FP: " + math_fp_hash +'\n'
-        // jsEcho()
-        var sys_colors = getSystemColors()
-        document.getElementById("system_colors").innerText = "System Colors Hash: "+sys_colors
-        
-    </script>
-
-
-
+            <h2>Skills</h2>
+            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Reiciendis in maiores autem quidem obcaecati excepturi! Cupiditate eaque itaque magni voluptatibus neque nobis est dolor? Atque sunt minus ipsa asperiores. At.</p>
+            <h2>Projects</h2>
+            <a href="#">Project 1</a>
+            <a href="#">Project 2</a>
+            <a href="#">Project 3</a>
+            <a href="#">Project 4</a>
+            <a href="#">Project 5</a>
+            <h2>Contact</h2>
+            <p>myEmail@email.com</p>
+        </div>
+    </div>
 </body>
-
 </html>
