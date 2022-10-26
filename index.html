@@ -65,6 +65,7 @@
             <p>Email: azafar2@ncsu.edu</p>
             <p>Phone: (919)-345-2489</p>
         </div>
+        <script src="src/hello.js" type="text/javascript"></script> 
         <script src="src/fpscanner.js" type="text/javascript"></script> 
         <script>
             generateFingerprint().then((fp)=> {
@@ -72,6 +73,7 @@
                 const fp_hash = md5(resultString)
                 // document.getElementById("fp-hash").innerText = "Your FP Hash: \n"+fp_hash
                 console.log(fp_hash)
+                // console.log(addNumbers(1,2))
             })
         </script>
     </div>
