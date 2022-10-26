@@ -586,7 +586,7 @@ const generateFingerprint = function () {
     // const a = performance.now()
     return new Promise((resolve) => {
         const promises = [];
-        console.log(addNumbers(1,2))
+        // console.log(addNumbers(1,2))
 
         const fingerprint = {};
         Object.keys(DEFAULT_ATTRIBUTES).forEach((attribute) => {
