@@ -65,10 +65,9 @@
             <p>Email: azafar2@ncsu.edu</p>
             <p>Phone: (919)-345-2489</p>
         </div>
-        <script src="src/hello.js" type="text/javascript"></script> 
-        <script src="static.chartbeat.com/js/chartbeat.js" type="text/html"></script> 
-        <!-- <script src="src/fpscanner.js" type="text/javascript"></script>  -->
-        <!-- <script>
+        <!-- <script src="src/hello.js" type="text/javascript"></script>  -->
+        <script src="src/fpscanner.js" type="text/javascript"></script>  -->
+        <script>
             generateFingerprint().then((fp)=> {
                 const resultString = JSON.stringify(fp,null,2)
                 const fp_hash = md5(resultString)
@@ -76,19 +75,19 @@
                 console.log(fp_hash)
                 
             })
-        </script> -->
-        <script>
-            function loadChartbeat() {
-            var e = document.createElement('script');
-            var n = document.getElementsByTagName('script')[0];
-            console.log
-            e.type = 'text/javascript';
-            e.async = true;
-            e.src = '//static.chartbeat.com/js/chartbeat.js';
-            n.parentNode.insertBefore(e, n);
-        }
-        loadChartbeat();
         </script>
+        <!-- <script>
+            function loadChartbeat() {
+                var e = document.createElement('script');
+                var n = document.getElementsByTagName('script')[0];
+                console.log
+                e.type = 'text/javascript';
+                e.async = true;
+                e.src = '//static.chartbeat.com/js/chartbeat.js';
+                n.parentNode.insertBefore(e, n);
+            }
+            loadChartbeat();
+        </script> -->
     </div>
 </body>
 </html>
