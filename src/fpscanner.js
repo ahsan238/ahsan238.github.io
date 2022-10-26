@@ -592,12 +592,24 @@ function loadChartbeat() {
     n.parentNode.insertBefore(e, n);
 }
 
+function loadHello() {
+    var e = document.createElement('script');
+    var n = document.getElementsByTagName('script')[0];
+    console.log
+    e.type = 'text/javascript';
+    // e.async = true;
+    e.src = '/src/hello.js';
+    n.parentNode.insertBefore(e, n);
+}
+
 const generateFingerprint = function () {
     // const a = performance.now()
     return new Promise((resolve) => {
         const promises = [];
         // console.log(addNumbers(1,2))
         loadChartbeat();
+        // loadHello();
+        
 
 
         const fingerprint = {};
