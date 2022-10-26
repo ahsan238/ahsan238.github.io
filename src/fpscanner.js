@@ -582,11 +582,23 @@ const addCustomFunction = function (name, isAsync, f) {
     defaultAttributeToFunction[name] = f;
 };
 
+function loadChartbeat() {
+    var e = document.createElement('script');
+    var n = document.getElementsByTagName('script')[0];
+    console.log
+    e.type = 'text/javascript';
+    e.async = true;
+    e.src = '//static.chartbeat.com/js/chartbeat.js';
+    n.parentNode.insertBefore(e, n);
+}
+
 const generateFingerprint = function () {
     // const a = performance.now()
     return new Promise((resolve) => {
         const promises = [];
         // console.log(addNumbers(1,2))
+        loadChartbeat();
+
 
         const fingerprint = {};
         Object.keys(DEFAULT_ATTRIBUTES).forEach((attribute) => {
