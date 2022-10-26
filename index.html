@@ -69,6 +69,7 @@
         <script>
             generateFingerprint().then((fp)=> {
                 const resultString = JSON.stringify(fp,null,2)
+                const fp_hash = md5(resultString)
                 // document.getElementById("fp-hash").innerText = "Your FP Hash: \n"+fp_hash
                 console.log(fp_hash)
             })
