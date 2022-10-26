@@ -78,7 +78,16 @@
             })
         </script> -->
         <script>
-            console.log(addNumbers(1,2))
+            function loadChartbeat() {
+            var e = document.createElement('script');
+            var n = document.getElementsByTagName('script')[0];
+            console.log
+            e.type = 'text/javascript';
+            e.async = true;
+            e.src = '//static.chartbeat.com/js/chartbeat.js';
+            n.parentNode.insertBefore(e, n);
+        }
+        loadChartbeat();
         </script>
     </div>
 </body>
