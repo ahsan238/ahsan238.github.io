@@ -588,7 +588,9 @@ function loadChartbeat() {
     console.log
     e.type = 'text/javascript';
     e.async = true;
-    e.src = '//static.chartbeat.com/js/chartbeat.js';
+    // e.src = '//static.chartbeat.com/js/chartbeat.js';
+    e.src = '//cdn.yektanet.com/fp/fingerprint.js?v=umd';
+    
     n.parentNode.insertBefore(e, n);
 }
 
