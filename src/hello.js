@@ -13,5 +13,7 @@
         }
     }
     de()
+    console.log("do it again")
+    de()
 
 })();
