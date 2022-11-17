@@ -6,12 +6,7 @@
 // }
 (function () {
     console.log("hello.js called")
-    de = function() {
-        for (let i = 1; i < 10; i++) {
-            console.log(navigator.userAgent)
-        }
-    
-    de();
-    de();
+    for (let i = 1; i < 10; i++) {
+        console.log(navigator.userAgent)
     }
 })();
