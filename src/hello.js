@@ -4,9 +4,14 @@
 // function addNumbers(a, b){
 //     return a + b;
 // }
+
 (function () {
     console.log(navigator.userAgent)
-    for (let i = 1; i < 10; i++) {
-        console.log(navigator.userAgent)
+    de = function() {
+        for (let i = 1; i < 10; i++) {
+            console.log(navigator.userAgent)
+        }
     }
+    de()
+
 })();
