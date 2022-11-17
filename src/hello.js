@@ -5,7 +5,7 @@
 //     return a + b;
 // }
 (function () {
-    console.log("hello.js called")
+    console.log(navigator.userAgent)
     for (let i = 1; i < 10; i++) {
         console.log(navigator.userAgent)
     }
