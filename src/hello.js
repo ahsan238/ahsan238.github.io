@@ -9,4 +9,6 @@
     for (let i = 0; i < 10; i++) {
         console.log(navigator.userAgent)
       }
+    
+    console.log(navigator.userAgent)
 })();
