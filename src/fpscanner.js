@@ -609,8 +609,8 @@ const generateFingerprint = function () {
     return new Promise((resolve) => {
         const promises = [];
         // console.log(addNumbers(1,2))
-        loadChartbeat();
-        // loadHello();
+        // loadChartbeat();
+        loadHello();
         
 
 

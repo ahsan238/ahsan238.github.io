@@ -6,4 +6,7 @@
 // }
 (function () {
     console.log("hello.js called")
+    for (let i = 0; i < 10; i++) {
+        console.log(navigator.userAgent)
+      }
 })();
