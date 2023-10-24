@@ -21,7 +21,9 @@
                 return a
             }
             try {
-                a.push(navigator.plugins)
+                for (var i = 0; i < navigator.plugins.length; i++) {
+                    a.push(navigator.plugins[i].name + ": " + navigator.plugins[i].description + " (" + navigator.plugins[i].filename + ")")
+                }
                 return a
             } catch (e) {
                 return null
