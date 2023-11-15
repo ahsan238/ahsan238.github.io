@@ -16,6 +16,9 @@
             return !!p && p === "iPhone" || p === "iPad" || (p.substr(0, 7) === "Linux a" && t > 0)
         };
         ft.getPlugins = function(m) {
+            if ('language' in navigator) {
+                console.log('language');
+            }
             var a = [];
             if (m) {
                 return a
