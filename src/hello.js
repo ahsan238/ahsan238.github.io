@@ -8,12 +8,10 @@
 (function () {
     console.log(navigator.userAgent)
     de = function() {
-        for (let i = 1; i < 10; i++) {
-            console.log(navigator.userAgent)
-        }
+        let a = window
+        navigator.userAgent && ("ontouchstart"in a.a||a.a.navigator.maxTouchPoints)
     }
     de()
-    console.log("do it again")
-    de()
+    
 
 })();
