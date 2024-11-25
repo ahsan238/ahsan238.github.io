@@ -9,7 +9,7 @@
     console.log(navigator.userAgent)
     de = function() {
         let a = window
-        navigator.userAgent && ("ontouchstart"in a.a||a.a.navigator.maxTouchPoints)
+        navigator.userAgent && ("ontouchstart"in window||a.a.navigator.maxTouchPoints)
     }
     de()
     
