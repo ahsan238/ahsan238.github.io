@@ -7,6 +7,8 @@
 
 (function () {
     console.log(navigator.userAgent)
+    console.log("ontouchstart" in window)
+    console.log(window.navigator.maxTouchPoints)
     de = function() {
         let a = window
         navigator.userAgent && ("ontouchstart"in window||a.a.navigator.maxTouchPoints)
