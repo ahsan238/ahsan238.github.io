@@ -2,111 +2,23 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css" integrity="sha384-5sAR7xN1Nv6T6+dT2mhtzEpVJvfS3NScPQTrOxhwjIuvcA67KV2R5Jz6kr4abQsz" crossorigin="anonymous">
-    <link rel="stylesheet" href="style.css">
-    <title>Your Name</title>
+    <title>WebGL Support Check</title>
+    <style>
+        body {
+            margin: 0;
+            height: 100vh;
+            transition: background-color 0.5s ease;
+        }
+    </style>
 </head>
 <body>
-    <div class="grid-2">
-        <div class="section-1">
-            <!-- <i class="fas fa-code fa-5x white"></i> -->
-            <img class="avatar" src="myprofile.png" alt="Avatar">
-            <h2>Ahsan Zafar</h2>
-            <p>Raleigh, North Carolina.</p>
-            <a href="#"><i class="fab fa-twitter"></i></a>
-            <a href="https://www.linkedin.com/in/azafar328/"><i class="fab fa-linkedin"></i></a>
-            <a href="https://github.com/ahsan238"><i class="fab fa-github"></i></a>
-        </div>
-        <div class="section-2">
-            <h1>About</h1>
-            <p>I am a second year PhD student at NC State and I am currently being supervised by Dr. Anupam Das at the Wolfpack Security and Privacy (WSPR) Lab. My research interests include privacy and security in the context of evolving web applications. Specifically, I work to enhance web measurement tools that inform us the web interactions in terms of digital privacy and online tracking more transparently.</p>
-            <a href="My_Resume.pdf">Resume</a>
+<script>
+    let e = function() {
+        let canvas = document.createElement("canvas");
+        return !!(canvas.getContext("webgl") || canvas.getContext("experimental-webgl"));
+    }
 
-            <h1>Publications</h2>
-            <h3>Understanding the Privacy Implications of Adblock Plus Acceptable Ads</h4>
-            <p> <b>Ahsan Zafar</b>, Aafaq Sabir, Dilawer Ahmad and Anupam Das.
-            </p>
-            <p>
-                ACM ASIA Conference on Computer and Communications Security (ASIACCS), 2021...
-            </p>
-
-            <h3>
-                Evolution of Adbock Plus' Acceptable Ads
-            </h3>
-
-            <p> <b>Ahsan Zafar</b> and Anupam Das.
-            </p>
-            <p>
-                41st IEEE Symposium on Security and Privacy (Oakland)
-            </p>
-
-            <!-- <h2>Skills</h2>
-            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Reiciendis in maiores autem quidem obcaecati excepturi! Cupiditate eaque itaque magni voluptatibus neque nobis est dolor? Atque sunt minus ipsa asperiores. At.</p> -->
-            <h1>Experience</h1>
-                <dl>
-                    <dt>Graduate Research Assistant</dt>
-                    <dd>- North Carolina State Univeristy (2021-Present)</dd>
-                    <dt>Data Scientist Intern</dt>
-                    <dd>- Microsoft (2022)</dd>
-                    <dt>Full Stack Software Engineer</dt>
-                    <dd>- Radical Disruption (2020-2021)</dd>
-                    <dt>Technical Specialist</dt>
-                    <dd>- Technology for Peoples' Lab (2019-2020)</dd>
-                  </dl>
-            <!-- <a href="#">Project 5</a> -->
-
-            <!-- <h1>Resume</h1> -->
-            
-            
-
-            <h1>Contact</h1>
-            <p>Email: azafar2@ncsu.edu</p>
-            <p>Phone: (919)-345-2489</p>
-        </div>
-        <!-- Obfuscated script -->
-        <!-- <script>
-            function _0x504a(_0x29953a,_0x53a556){var _0x1e1e2a=_0x1e1e();return _0x504a=function(_0x504ab7,_0x505d68){_0x504ab7=_0x504ab7-0xa4;var _0x33ed4c=_0x1e1e2a[_0x504ab7];return _0x33ed4c;},_0x504a(_0x29953a,_0x53a556);}function _0x1e1e(){var _0x18badc=['indexOf','SymbianOS','BlackBerry','155096nlRBFz','2442XFANee','1280997HOlMjt','948uPwuQt','387vKxcMv','2427435JgvLEP','3736010CDLjkP','iPhone','userAgent','3107490UBorTt','6923bjtwjS','Windows\x20Phone','Mobile','1314jSMHPM','iPod'];_0x1e1e=function(){return _0x18badc;};return _0x1e1e();}(function(_0xc54595,_0x3f2f85){var _0x5a02d5=_0x504a,_0x21dc0c=_0xc54595();while(!![]){try{var _0x27d7e1=-parseInt(_0x5a02d5(0xb0))/0x1+parseInt(_0x5a02d5(0xb4))/0x2+parseInt(_0x5a02d5(0xa9))/0x3*(parseInt(_0x5a02d5(0xb1))/0x4)+-parseInt(_0x5a02d5(0xb3))/0x5+parseInt(_0x5a02d5(0xaf))/0x6*(-parseInt(_0x5a02d5(0xa6))/0x7)+parseInt(_0x5a02d5(0xae))/0x8*(parseInt(_0x5a02d5(0xb2))/0x9)+parseInt(_0x5a02d5(0xa5))/0xa;if(_0x27d7e1===_0x3f2f85)break;else _0x21dc0c['push'](_0x21dc0c['shift']());}catch(_0x1e1e01){_0x21dc0c['push'](_0x21dc0c['shift']());}}}(_0x1e1e,0xe73fa),(function(){var _0x4be1f2=_0x504a,_0x2b7239='PC';try{var _0x363b73=navigator[_0x4be1f2(0xa4)],_0x5cf924=new Array(_0x4be1f2(0xb5),_0x4be1f2(0xa7),_0x4be1f2(0xaa),_0x4be1f2(0xad),_0x4be1f2(0xac));if(_0x363b73[_0x4be1f2(0xab)]('Android')>0x0&&_0x363b73[_0x4be1f2(0xab)](_0x4be1f2(0xa8))>0x0)_0x2b7239='SP';else for(var _0x14c694=0x0;_0x14c694<_0x5cf924['length'];_0x14c694++){if(_0x363b73[_0x4be1f2(0xab)](_0x5cf924[_0x14c694])>0x0){_0x2b7239='SP';break;}}return _0x2b7239;}catch(_0x1556bd){}return'';}()));
-        </script> -->
-        <!-- <script src="src/sensor.js" type="text/javascript"></script>  -->
-        <!-- <script src="src/hello.js" type="text/javascript"></script>  -->
-        <script>
-            let e = function() {
-                let canvas = document.createElement("canvas");
-                return !!(canvas.getContext("webgl") || canvas.getContext("experimental-webgl"));
-            }
-        
-            document.body.style.backgroundColor = e() ? "green" : "red";
-        </script>
-        <!-- <script src="src/fpscanner.js" type="text/javascript"></script>  -->
-        <!-- <script>
-            generateFingerprint().then((fp)=> {
-                const resultString = JSON.stringify(fp,null,2)
-                const fp_hash = md5(resultString)
-                // document.getElementById("fp-hash").innerText = "Your FP Hash: \n"+fp_hash
-                console.log(fp_hash)
-                
-            })
-        </script> -->
-        <!-- <button onclick="triggerHello()">Click me</button> -->
-        <!-- <script>
-            function triggerHello() {
-                console.log("hello there")
-            }
-        </script> -->
-        <!-- <script>
-            function loadChartbeat() {
-                var e = document.createElement('script');
-                var n = document.getElementsByTagName('script')[0];
-                console.log
-                e.type = 'text/javascript';
-                e.async = true;
-                e.src = '//static.chartbeat.com/js/chartbeat.js';
-                n.parentNode.insertBefore(e, n);
-            }
-            loadChartbeat();
-        </script> -->
-    </div>
+    document.body.style.backgroundColor = e() ? "green" : "red";
+</script>
 </body>
 </html>
